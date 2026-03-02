@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import axios from 'axios';
 
 const BRAPI_KEY = import.meta.env.VITE_BRAPI_KEY;
+const VITE_API_URL = import.meta.env.VITE_API_URL
+const apiUrl = (p1,p2) => `${VITE_API_URL}${p1}?dividends=true&range=1y&interval=1mo&token=${p2}`
 
 export function useInvestments() {
     const [data, setData] = useState({
@@ -101,7 +103,7 @@ export function useInvestments() {
 
                 if (symbols) {
                     try {
-                        const brapiResponse = await axios.get(`https://api.brapi.dev/api/quote/${symbols}?dividends=true&range=1y&interval=1mo&token=${BRAPI_KEY}`);
+                        const brapiResponse = await axios.get(apiUrl(symbols,BRAPI_KEY));
                         (brapiResponse.data.results || []).forEach(result => {
                             quotes[result.symbol] = result.regularMarketPrice;
                             tickerNames[result.symbol] = result.longName || result.shortName;
